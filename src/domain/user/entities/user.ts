@@ -35,6 +35,11 @@ export class User extends Entity<UserProps> {
     return Result.ok(user);
   }
 
+  public equals(other: User): boolean {
+    if (!other) return false;
+    return this.props.id.equals(other.props.id);
+  }
+
   get id(): UserId {
     return this.props.id;
   }

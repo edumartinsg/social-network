@@ -5,6 +5,10 @@ coverage
 .env
 .DS_Store
 .idea
+node_modules/
+dist/
+.env
+.env.local
 .vscode
 *.log
 *.tsbuildinfo

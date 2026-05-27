@@ -1,6 +1,4 @@
 import { Result } from "@/domain/shared/result";
-import { UUID } from "crypto";
-
 import { randomUUID } from 'crypto';
 
 export class UserId {
@@ -15,8 +13,17 @@ export class UserId {
     return Result.ok(new UserId(finalId));
   }
 
-  get value(): string {
-    return this.value;
+  public equals(other: UserId): boolean {
+    if (!other) return false;
+    return this._value === other._value;
   }
+
+
+
+ get value(): string {
+    //if return this.value it will cause a stack overflow because it will call the getter recursively.
+    return this._value;
+  }
+
 }
 

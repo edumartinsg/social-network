@@ -1,11 +1,10 @@
+import { Entity } from '@/domain/shared/entity';
+import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor';
 import { Result } from '@/domain/shared/result';
 
-interface PasswordProps {
-  value: string;
-}
 
-export class Password {
-  private constructor(private readonly props: PasswordProps) {}
+export class Password{
+  private constructor(private readonly _value: string) {}
 
   public static create(password: string): Result<Password> {
     const trimmed = password.trim();
@@ -26,15 +25,30 @@ export class Password {
       return Result.fail('Password must contain at least one special character');
     }
 
-    return Result.ok(new Password({ value: trimmed }));
+    return Result.ok(new Password(trimmed));
   }
 
+
+public async toHash(encryptor: IEncryptor): Promise<Password> {
+  const hashed = await encryptor.hash(this._value)
+  return new Password(hashed)
+}
+
+public async compare(plain: string, encryptor: IEncryptor): Promise<boolean> {
+  return encryptor.compare(plain, this._value)
+}
+
+
   get value(): string {
-    return this.props.value;
+    return this._value;
   }
 
   public equals(other: Password): boolean {
     if (!other) return false;
-    return this.props.value === other.props.value;
+    return this._value === other._value;
   }
+
 }
+
+
+
