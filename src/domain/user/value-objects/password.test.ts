@@ -53,7 +53,7 @@ it('should hash a password', async () => {
   }
 
   const password = Password.create('Password123!').value
-  const hashed = await password.toHash(mockEncryptor)
+  const hashed = await password.hash(mockEncryptor)
 
   expect(mockEncryptor.hash).toHaveBeenCalledWith('Password123!')
   expect(hashed).toBeInstanceOf(Password)

@@ -29,7 +29,7 @@ export class Password{
   }
 
 
-public async toHash(encryptor: IEncryptor): Promise<Password> {
+public async hash(encryptor: IEncryptor): Promise<Password> {
   const hashed = await encryptor.hash(this._value)
   return new Password(hashed)
 }

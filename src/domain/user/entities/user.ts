@@ -3,10 +3,15 @@ import { UserId } from '../value-objects/userId';
 import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
 import { Result } from '@/domain/shared/result';
+import { UserName } from '../value-objects/username';
+import { Age } from '../value-objects/age';
 
 export interface UserProps {
   id: UserId;
   email: Email;
+  name?: string;
+  username: UserName;
+  age: Age;
   password: Password;
   createdAt: Date;
   updatedAt: Date | null;
@@ -19,7 +24,10 @@ export class User extends Entity<UserProps> {
 
   public static create(props: {
     id: UserId;
+    name?: string;
     email: Email;
+    age: Age;
+    username: UserName;
     password: Password;
     createdAt?: Date;
     updatedAt?: Date | null;
@@ -28,8 +36,10 @@ export class User extends Entity<UserProps> {
 
     const user = new User({
       ...props,
+      age: props.age,
       createdAt: props.createdAt ?? now,
       updatedAt: props.updatedAt ?? null,
+      username: props.username,
     });
 
     return Result.ok(user);
@@ -42,6 +52,18 @@ export class User extends Entity<UserProps> {
 
   get id(): UserId {
     return this.props.id;
+  }
+
+  get username(): UserName {
+    return this.props.username;
+  }
+
+  get age(): Age {
+    return this.props.age;
+  }
+
+  get name(): string | undefined {
+    return this.props.name;
   }
 
   get email(): Email {
