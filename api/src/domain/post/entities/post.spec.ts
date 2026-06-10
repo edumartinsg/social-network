@@ -1,6 +1,6 @@
 import { expect, test } from "vitest"
 import { Post } from "./post"
-import { PostContent } from "../value-objects/post-content"
+import { PostContent } from "../../shared/image"
 
 
     //Create a post to be used in the tests
