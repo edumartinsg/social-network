@@ -144,7 +144,7 @@ apps/
         │   │   ├── entities/
         │   │   │   └── post.ts
         │   │   ├── repositories/
-        │   │   │   └── IPostRepository.ts
+        │   │   │   └── PostRepository.ts
         │   │   └── value-objects/
         │   │       ├── content/
         │   │       │   ├── ArticleContent.ts

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { Password } from './password'
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor'
+import { IEncryptor } from '@/domain/shared/interfaces/Encryptor'
 
 describe('Password Value Object', () => {
 

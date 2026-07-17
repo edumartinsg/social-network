@@ -15,6 +15,7 @@ export interface UserProps {
   password: Password;
   createdAt: Date;
   updatedAt: Date | null;
+  deletedAt?: Date | null;
 }
 
 export class User extends Entity<UserProps> {
@@ -31,6 +32,7 @@ export class User extends Entity<UserProps> {
     password: Password;
     createdAt?: Date;
     updatedAt?: Date | null;
+    deletedAt?: Date | null;
   }): Result<User> {
     const now = new Date();
 
@@ -80,5 +82,9 @@ export class User extends Entity<UserProps> {
 
   get updatedAt(): Date | null {
     return this.props.updatedAt;
+  }
+
+  get deletedAt(): Date | null | undefined {
+    return this.props.deletedAt;
   }
 }

@@ -1,5 +1,5 @@
 import { Result } from "@/domain/shared/result"
-import { Image } from "../../shared/image"
+import { Image } from "@/shared/image"
 
 export class ArticleContent {
   private constructor(

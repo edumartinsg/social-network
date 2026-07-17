@@ -1,5 +1,5 @@
 import { Result } from "@/domain/shared/result";
-import { IUserRepository } from "../repositories/IUserRepository";
+import { IUserRepository } from "../repositories/UserRepository";
 
 export class UserName {
   private constructor(private readonly _value: string) {}
