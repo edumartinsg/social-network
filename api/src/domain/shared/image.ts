@@ -11,6 +11,7 @@ export class Image {
       return Result.fail('Invalid image URL format')
     }
     return Result.ok(new Image(url))
+    
   }
 
   get url(): string { return this._url }

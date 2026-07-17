@@ -1,4 +1,4 @@
-import { Result } from "../../shared/result";
+import { Result } from "@/shared/result";
 
 export class Email {
   private constructor(private readonly _value: string) {}

@@ -19,7 +19,7 @@ Validates PostTitle
 Validates MediaType
 Builds the right content Value Object based on mediaType
 Creates Post entity
-Saves via IPostRepository.save()
+Saves via PostRepository.save()
 Returns Result<Post>
 
 Tests:

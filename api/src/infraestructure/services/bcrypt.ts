@@ -1,9 +1,9 @@
 import bcrypt from 'bcrypt';
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor';
+import { Encryptor } from '@/domain/shared/interfaces/Encryptor';
 
 // This class implements the Encryptor interface using bcrypt for hashing and comparing passwords.
 
-export class BcryptEncryptor implements IEncryptor {
+export class BcryptEncryptor implements Encryptor {
   private readonly saltRounds = 10;
 
   public async hash(password: string): Promise<string> {
