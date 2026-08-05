@@ -3,6 +3,8 @@ import fastifyJwt from '@fastify/jwt'
 import fastifyCookie from '@fastify/cookie'
 import { ZodError } from 'zod'
 import { env } from '@/env'
+import { userRoutes } from './controllers/users/routes'
+import { postRoutes } from './controllers/posts/routes'
 
 export const app = fastify({ logger: true })
 
@@ -12,9 +14,8 @@ app.register(fastifyJwt, {
 
 app.register(fastifyCookie)
 
-// routes registered in Part 4
-// app.register(usersRoutes, { prefix: '/users' })
-// app.register(postsRoutes, { prefix: '/posts' })
+app.register(userRoutes, { prefix: '/users' })
+app.register(postRoutes, { prefix: '/posts' })
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {

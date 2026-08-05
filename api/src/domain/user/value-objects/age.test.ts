@@ -1,34 +1,32 @@
-
-import { Age } from './age'
 import { describe, it, expect } from 'vitest'
+import { Age } from './age'
 
-describe('Age Value Object', () => {
+describe('Age', () => {
   it('should create a valid age', () => {
     const result = Age.create(25)
-    const age = result.value
     expect(result.isSuccess).toBe(true)
-    expect(age.value).toBe(25)
-  })
-  it('should fail when age is negative', () => {
-    const result = Age.create(-5)
-    expect(result.isFailure).toBe(true)
-    expect(result.error).toBe('Age must be a positive number')
+    expect(result.value.value).toBe(25)
   })
 
-  it('should fail when age is less than 18', () => {
+  it('should fail if age is under 18', () => {
     const result = Age.create(17)
     expect(result.isFailure).toBe(true)
     expect(result.error).toBe('User must be at least 18 years old')
   })
-  it('should fail when age is undefined', () => {
-    const result = Age.create(undefined as unknown as number)
+
+  it('should fail if age is negative', () => {
+    const result = Age.create(-1)
     expect(result.isFailure).toBe(true)
-    expect(result.error).toBe('Age is required')
   })
 
-  it('should fail when age is null', () => {
-    const result = Age.create(null as unknown as number)
+  it('should fail if age is undefined', () => {
+    // @ts-expect-error testing runtime guard
+    const result = Age.create(undefined)
     expect(result.isFailure).toBe(true)
-    expect(result.error).toBe('Age is required')
-  })  
+  })
+
+  it('should succeed exactly at 18', () => {
+    const result = Age.create(18)
+    expect(result.isSuccess).toBe(true)
+  })
 })

@@ -55,25 +55,20 @@ export class Post extends Entity<PostProps> {
     return Result.ok(post)
   }
 
-  // user edits their own post content
   public edit(newContent: PostContent): void {
     this.props.content = newContent
     this.props.updatedAt = new Date()
   }
 
-  // user deletes their own post — hard delete signal
-  // actual removal from DB happens in the use case + repository
   public deleteByUser(): void {
     this.props.deletedAt = new Date()
   }
 
-  // moderation deletes post — goes to QuarantineZone
   public deleteByModeration(): void {
     this.props.deletedAt = new Date()
     this.props.isDeletedByModeration = true
   }
 
-  // getters
   get postId(): string { return this.props.postId }
   get title(): PostTitle { return this.props.title }
   get caption(): PostCaption | null { return this.props.caption }

@@ -1,5 +1,5 @@
 import { UserRepository } from "@/domain/user/repositories/UserRepository"
-import { Encryptor } from "@/domain/shared/interfaces/Encryptor"
+import { IEncryptor } from "@/domain/shared/interfaces/IEncryptor"
 import { User } from "@/domain/user/entities/user"
 import { Result } from "@/domain/shared/result"
 
@@ -13,7 +13,7 @@ type AuthenticateUseCaseResponse = Result<User>
 export class AuthenticateUserUseCase {
   constructor(
     private usersRepository: UserRepository,
-    private encryptor: Encryptor
+    private encryptor: IEncryptor
   ) {}
 
   async execute({

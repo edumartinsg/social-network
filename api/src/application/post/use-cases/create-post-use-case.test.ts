@@ -1,13 +1,12 @@
-
-import { describe, it, vi, beforeEach, expect } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { PostRepository } from '@/domain/post/repositories/PostRepository'
 import { CreatePostUseCase } from './create-post-use-case'
-import { IUserRepository } from '@/domain/user/repositories/UserRepository'
+import { UserRepository } from '@/domain/user/repositories/UserRepository'
 
-describe('CreateUserUseCase', () => {
+describe('CreatePostUseCase', () => {
   let postUseCase: CreatePostUseCase
   let mockPostRepository: PostRepository
-  let mockUserRepository: IUserRepository
+  let mockUserRepository: UserRepository
 
   const baseRequest = {
     authorId: 'author-123',
@@ -34,12 +33,12 @@ describe('CreateUserUseCase', () => {
 
     postUseCase = new CreatePostUseCase(mockPostRepository, mockUserRepository)
   })
-  
+
   it('should create an article post successfully', async () => {
     const result = await postUseCase.execute({
       ...baseRequest,
       mediaType: 'article',
-      body: 'a'.repeat(100), // meets the 100 char minimum
+      body: 'a'.repeat(100),
     })
 
     expect(result.isSuccess).toBe(true)
@@ -112,7 +111,7 @@ describe('CreateUserUseCase', () => {
     const result = await postUseCase.execute({
       ...baseRequest,
       mediaType: 'article',
-      body: 'too short', // fails 100 char minimum
+      body: 'too short',
     })
 
     expect(result.isFailure).toBe(true)

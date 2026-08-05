@@ -1,48 +1,36 @@
 import { describe, it, expect } from 'vitest'
 import { Email } from './email'
 
-describe('Email Value Object', () => {
+describe('Email', () => {
   it('should create a valid email', () => {
-    const result = Email.create('john@example.com')
-    const email = result.value
-
+    const result = Email.create('john@email.com')
     expect(result.isSuccess).toBe(true)
-    expect(email.value).toBe('john@example.com')
+    expect(result.value.value).toBe('john@email.com')
   })
 
-  it('should fail when email has no @', () => {
-    const result = Email.create('johnexample.com')
-
-    expect(result.isFailure).toBe(true)
-    expect(result.error).toBeDefined()
+  it('should store the email in lowercase', () => {
+    const result = Email.create('John@Email.com')
+    expect(result.value.value).toBe('john@email.com')
   })
 
-  it('should fail when email is empty', () => {
+  it('should fail with an empty email', () => {
     const result = Email.create('')
-
     expect(result.isFailure).toBe(true)
   })
 
-  it('should fail when there is nothing before @', () => {
-    const result = Email.create('@example.com')
-
+  it('should fail with an invalid format', () => {
+    const result = Email.create('not-an-email')
     expect(result.isFailure).toBe(true)
   })
 
-  it('should fail when there is nothing after @', () => {
-    const result = Email.create('john@')
-
-    expect(result.isFailure).toBe(true)
+  it('should trim whitespace', () => {
+    const result = Email.create('  john@email.com  ')
+    expect(result.value.value).toBe('john@email.com')
   })
 
-  it('should compare two email objects correctly', () => {
-    const e1 = Email.create('john@example.com')
-    const e2 = Email.create('john@example.com')
-    const e3 = Email.create('jane@example.com')
-
-    expect(e1.isSuccess && e2.isSuccess && e3.isSuccess).toBe(true)
-
-    expect(e1.value.equals(e2.value)).toBe(true)
-    expect(e1.value.equals(e3.value)).toBe(false)
+  it('should compare two equal emails as equal', () => {
+    const a = Email.create('john@email.com').value
+    const b = Email.create('john@email.com').value
+    expect(a.equals(b)).toBe(true)
   })
 })

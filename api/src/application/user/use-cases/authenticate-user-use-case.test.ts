@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { IUserRepository } from '@/domain/user/repositories/UserRepository'
-import { IEncryptor } from '@/domain/shared/interfaces/Encryptor'
+import { UserRepository } from '@/domain/user/repositories/UserRepository'
+import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor'
 import { AuthenticateUserUseCase } from './authenticate-user-use-case'
 import { User } from '@/domain/user/entities/user'
 import { Email } from '@/domain/user/value-objects/email'
@@ -20,7 +20,7 @@ function makeUser() {
   }).value
 }
 
-function makeMockUserRepository(overrides?: Partial<IUserRepository>): IUserRepository {
+function makeMockUserRepository(overrides?: Partial<UserRepository>): UserRepository {
   return {
     findByEmail: vi.fn().mockResolvedValue(null),
     findByUsername: vi.fn().mockResolvedValue(null),
@@ -58,7 +58,7 @@ describe('AuthenticateUserUseCase', () => {
 
   it('should fail if user is not found', async () => {
     const useCase = new AuthenticateUserUseCase(
-      makeMockUserRepository(), // findByEmail returns null by default
+      makeMockUserRepository(),
       mockEncryptor
     )
 

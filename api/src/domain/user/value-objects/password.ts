@@ -1,7 +1,5 @@
-import { Entity } from '@/domain/shared/entity';
-import { IEncryptor } from '@/domain/shared/interfaces/Encryptor';
+import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor';
 import { Result } from '@/domain/shared/result';
-
 
 export class Password {
   private constructor(

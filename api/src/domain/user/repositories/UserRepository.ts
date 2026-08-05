@@ -1,4 +1,3 @@
-import { VoidKeyword } from '@/../node_modules/effect/src/SchemaAST';
 import { User } from '../entities/user';
 
 export interface UserRepository {
@@ -8,5 +7,3 @@ export interface UserRepository {
   save(user: User): Promise<void>
   delete(id: string): Promise<void>
 }
-
-
