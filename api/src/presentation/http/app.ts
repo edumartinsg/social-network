@@ -1,12 +1,14 @@
-import fastify from 'fastify'
-import fastifyJwt from '@fastify/jwt'
-import fastifyCookie from '@fastify/cookie'
-import { ZodError } from 'zod'
 import { env } from '@/env'
-import { userRoutes } from './controllers/users/routes'
+import fastifyCookie from '@fastify/cookie'
+import fastifyJwt from '@fastify/jwt'
+import fastify from 'fastify'
+import { ZodError } from 'zod'
 import { postRoutes } from './controllers/posts/routes'
+import { userRoutes } from './controllers/users/routes'
 
 export const app = fastify({ logger: true })
+
+console.log('Connected to database:', env.DATABASE_URL)
 
 app.register(fastifyJwt, {
   secret: env.JWT_SECRET,
@@ -25,6 +27,7 @@ app.setErrorHandler((error, _, reply) => {
   }
 
   if (env.NODE_ENV !== 'production') {
+
     console.error(error)
   }
 

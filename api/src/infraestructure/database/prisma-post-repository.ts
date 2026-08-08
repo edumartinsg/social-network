@@ -1,13 +1,13 @@
-import { prisma } from './lib/prisma'
-import { PostRepository } from '@/domain/post/repositories/PostRepository'
 import { Post } from '@/domain/post/entities/post'
-import { PostTitle } from '@/domain/post/value-objects/post-title'
-import { PostCaption } from '@/domain/post/value-objects/post-caption'
-import { MediaType } from '@/domain/post/value-objects/media-type'
+import { PostRepository } from '@/domain/post/repositories/PostRepository'
 import { ArticleContent } from '@/domain/post/value-objects/article-content'
 import { ImageContent } from '@/domain/post/value-objects/image-content'
+import { MediaType } from '@/domain/post/value-objects/media-type'
+import { PostCaption } from '@/domain/post/value-objects/post-caption'
+import { PostTitle } from '@/domain/post/value-objects/post-title'
 import { VideoContent } from '@/domain/post/value-objects/video-content'
 import { Image } from '@/domain/shared/image'
+import { prisma } from './lib/prisma'
 
 export class PrismaPostRepository implements PostRepository {
 
@@ -16,6 +16,28 @@ export class PrismaPostRepository implements PostRepository {
     if (!row) return null
     return this.toDomain(row)
   }
+
+  async findMany(params: {
+  authorIdIn?: string[]
+  authorIdNotIn?: string[]
+  cursor?: string
+  limit: number
+}): Promise<Post[]> {
+  const rows = await prisma.post.findMany({
+    take: params.limit,
+    skip: params.cursor ? 1 : 0,
+    cursor: params.cursor ? { id: params.cursor } : undefined,
+    where: {
+      deletedAt: null,
+      isDeletedByModeration: false,
+      ...(params.authorIdIn ? { authorId: { in: params.authorIdIn } } : {}),
+      ...(params.authorIdNotIn ? { authorId: { notIn: params.authorIdNotIn } } : {}),
+    },
+    orderBy: { createdAt: 'desc' },
+  })
+
+  return rows.map(row => this.toDomain(row))
+}
 
   async findByAuthor(authorId: string): Promise<Post[]> {
     const rows = await prisma.post.findMany({ where: { authorId } })

@@ -1,6 +1,6 @@
+import { makeCreatePostUseCase } from '@/factories/make-create-post-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import { makeCreatePostUseCase } from '@/factories/make-create-post-use-case'
 
 export async function createPost(request: FastifyRequest, reply: FastifyReply) {
   const createPostBodySchema = z.object({
@@ -31,5 +31,12 @@ export async function createPost(request: FastifyRequest, reply: FastifyReply) {
     return reply.status(400).send({ message: result.error })
   }
 
-  return reply.status(201).send()
+  const post = result.value
+
+  return reply.status(201).send({
+    id: post.postId,
+    title: post.title.value,
+    mediaType: post.mediaType.value,
+  })
+
 }

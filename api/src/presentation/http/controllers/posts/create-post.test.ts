@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest'
-import { app } from '@/presentation/http/app'
 import { prisma } from '@/infraestructure/database/lib/prisma'
+import { app } from '@/presentation/http/app'
+import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('POST /posts', () => {
 
@@ -68,8 +68,10 @@ describe('POST /posts', () => {
     expect(response.statusCode).toBe(201)
 
     const posts = await prisma.post.findMany()
+    if (!posts) throw new Error('No posts found')
     expect(posts).toHaveLength(1)
-    expect(posts[0].title).toBe('My first post')
+    if (posts[0])
+      expect(posts[0].title).toBe('My first post')
   })
 
   it('should ignore a forged authorId in the body and use the token instead', async () => {

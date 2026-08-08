@@ -1,6 +1,6 @@
+import { makeCreateUserUseCase } from '@/factories/make-create-user-use-case'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
-import { makeCreateUserUseCase } from '@/factories/make-create-user-use-case'
 
 export async function register(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
@@ -25,5 +25,11 @@ export async function register(request: FastifyRequest, reply: FastifyReply) {
     return reply.status(400).send({ message: result.error })
   }
 
-  return reply.status(201).send()
+  const user = result.value
+
+  return reply.status(201).send({
+    id: user.id.value,
+    email: user.email.value,
+    username: user.username.value,
+  })
 }

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { PostRepository } from '@/domain/post/repositories/PostRepository'
-import { CreatePostUseCase } from './create-post-use-case'
 import { UserRepository } from '@/domain/user/repositories/UserRepository'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { CreatePostUseCase } from './create-post-use-case'
 
 describe('CreatePostUseCase', () => {
   let postUseCase: CreatePostUseCase
@@ -15,6 +15,7 @@ describe('CreatePostUseCase', () => {
 
   beforeEach(() => {
     mockPostRepository = {
+      findMany: vi.fn().mockResolvedValue([]),
       findByAuthor: vi.fn().mockResolvedValue(null),
       hardDelete: vi.fn().mockResolvedValue(undefined),
       softDelete: vi.fn().mockResolvedValue(undefined),
