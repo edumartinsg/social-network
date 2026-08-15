@@ -1,4 +1,4 @@
-import { FollowRepository } from "@/application/follow/repositories/FollowRepository"
+import { FollowRepository } from "@/domain/follow/repositories/follow-repository"
 import { Result } from "@/domain/shared/result"
 
 interface UnfollowUserUseCaseRequest {

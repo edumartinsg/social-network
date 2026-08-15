@@ -5,8 +5,9 @@ import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 describe('DELETE /posts/:id', () => {
 
   beforeEach(async () => {
-    await prisma.post.deleteMany()
-    await prisma.user.deleteMany()
+await prisma.follow.deleteMany()
+await prisma.post.deleteMany()
+await prisma.user.deleteMany()
   })
 
   afterAll(async () => {

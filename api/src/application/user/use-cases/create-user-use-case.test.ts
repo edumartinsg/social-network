@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { IEncryptor } from '@/domain/shared/interfaces/encryptor'
 import { UserRepository } from '@/domain/user/repositories/UserRepository'
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreateUserUseCase } from './create-user-use-case'
 
 describe('CreateUserUseCase', () => {

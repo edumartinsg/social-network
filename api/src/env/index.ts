@@ -12,7 +12,7 @@ const envSchema = z.object({
   S3_SECRET_KEY: z.string(),
   S3_BUCKET_NAME: z.string(),
   AWS_REGION: z.string().optional(),
-  REDIS_URL: z.string().optional(),
+  REDIS_URL: z.string(),
 })
 
 export const env = envSchema.parse(process.env)

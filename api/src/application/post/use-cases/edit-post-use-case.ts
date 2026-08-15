@@ -1,4 +1,4 @@
-import { PostRepository } from "@/domain/post/repositories/PostRepository"
+import { PostRepository } from "@/domain/post/repositories/post-repository"
 import { ArticleContent } from "@/domain/post/value-objects/article-content"
 import { ImageContent } from "@/domain/post/value-objects/image-content"
 import { VideoContent } from "@/domain/post/value-objects/video-content"

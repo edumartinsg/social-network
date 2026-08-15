@@ -1,13 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { UserRepository } from '@/domain/user/repositories/UserRepository'
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor'
-import { AuthenticateUserUseCase } from './authenticate-user-use-case'
+import { IEncryptor } from '@/domain/shared/interfaces/encryptor'
 import { User } from '@/domain/user/entities/user'
+import { UserRepository } from '@/domain/user/repositories/UserRepository'
+import { Age } from '@/domain/user/value-objects/age'
 import { Email } from '@/domain/user/value-objects/email'
 import { Password } from '@/domain/user/value-objects/password'
-import { UserName } from '@/domain/user/value-objects/username'
-import { Age } from '@/domain/user/value-objects/age'
 import { UserId } from '@/domain/user/value-objects/userId'
+import { UserName } from '@/domain/user/value-objects/username'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { AuthenticateUserUseCase } from './authenticate-user-use-case'
 
 function makeUser() {
   return User.create({

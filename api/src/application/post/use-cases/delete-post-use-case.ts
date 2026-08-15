@@ -1,4 +1,4 @@
-import { PostRepository } from "@/domain/post/repositories/PostRepository"
+import { PostRepository } from "@/domain/post/repositories/post-repository"
 import { Result } from "@/domain/shared/result"
 
 // KNOWN GAP: isModerationAction is a plain boolean supplied by the caller.

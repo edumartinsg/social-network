@@ -1,5 +1,5 @@
 import { Follow } from "@/application/follow/entities/follow"
-import { FollowRepository } from "@/application/follow/repositories/FollowRepository"
+import { FollowRepository } from "@/domain/follow/repositories/follow-repository"
 import { Result } from "@/domain/shared/result"
 import { UserRepository } from "@/domain/user/repositories/UserRepository"
 

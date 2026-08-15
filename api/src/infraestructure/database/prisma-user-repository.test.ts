@@ -1,14 +1,12 @@
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor'
-import { UserRepository } from '@/domain/user/repositories/UserRepository'
-import { describe, it, expect, afterEach, afterAll } from 'vitest'
-import { prisma } from "./lib/prisma"
-import { PrismaUserRepository } from './prisma-user-repository'
 import { User } from '@/domain/user/entities/user'
+import { Age } from '@/domain/user/value-objects/age'
 import { Email } from '@/domain/user/value-objects/email'
 import { Password } from '@/domain/user/value-objects/password'
-import { UserName } from '@/domain/user/value-objects/username'
-import { Age } from '@/domain/user/value-objects/age'
 import { UserId } from '@/domain/user/value-objects/userId'
+import { UserName } from '@/domain/user/value-objects/username'
+import { afterAll, afterEach, describe, expect, it } from 'vitest'
+import { prisma } from "./lib/prisma"
+import { PrismaUserRepository } from './prisma-user-repository'
 
 function makeUser(overrides?: { email?: string; username?: string }) {
   return User.create({
@@ -24,8 +22,9 @@ function makeUser(overrides?: { email?: string; username?: string }) {
 describe('PrismaUserRepository', () => {
 
   afterEach(async () => {
-    await prisma.post.deleteMany()
-    await prisma.user.deleteMany()
+await prisma.follow.deleteMany()
+await prisma.post.deleteMany()
+await prisma.user.deleteMany()
   })
 
   afterAll(async () => {

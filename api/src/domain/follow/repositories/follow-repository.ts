@@ -1,4 +1,4 @@
-import { Follow } from "../entities/follow"
+import { Follow } from "../../../application/follow/entities/follow"
 
 export interface FollowRepository {
   exists(followerId: string, followingId: string): Promise<boolean>

@@ -1,6 +1,7 @@
-import { FollowRepository } from "@/application/follow/repositories/FollowRepository"
+import { FollowRepository } from "@/domain/follow/repositories/follow-repository"
 import { Post } from "@/domain/post/entities/post"
-import { PostRepository } from "@/domain/post/repositories/PostRepository"
+import { PostRepository } from "@/domain/post/repositories/post-repository"
+import { CacheProvider } from "@/domain/shared/interfaces/cache-provider"
 
 interface GetFeedUseCaseRequest {
   userId?: string
@@ -13,24 +14,50 @@ interface GetFeedResponse {
   nextCursor: string | null
 }
 
-//POSTS FOR WHO HAS AN ACCOUNT BUT DOESN'T FOLLOW ANYONE YET
 const ANONYMOUS_LIMIT = 5
-
-//NORMAL
 const FOLLOWING_LIMIT = 18
-
-//POSTS FOR WHO HAS NO ACCOUNT
 const DISCOVERY_LIMIT = 2
+
+// TTL chosen at 30 seconds: short enough that a new post from someone
+// you follow appears within a very tolerable delay, long enough that
+// a user refreshing their feed repeatedly (a common real behaviour)
+// hits the cache almost every time instead of Postgres. This is a
+// judgment call, not a fixed rule -- 30s trades a small amount of
+// staleness for a meaningful reduction in database load.
+const FEED_CACHE_TTL_SECONDS = 30
 
 export class GetFeedUseCase {
   constructor(
     private postRepository: PostRepository,
-    private followRepository: FollowRepository
+    private followRepository: FollowRepository,
+    private cacheProvider: CacheProvider
   ) {}
 
   public async execute(request: GetFeedUseCaseRequest): Promise<GetFeedResponse> {
+    const cacheKey = this.buildCacheKey(request)
 
-    // anonymous: fixed small sample, no personalization, no pagination
+    const cached = await this.cacheProvider.get(cacheKey)
+    if (cached) {
+      return JSON.parse(cached) as GetFeedResponse
+    }
+
+    const result = await this.computeFeed(request)
+
+    await this.cacheProvider.set(cacheKey, JSON.stringify(result), FEED_CACHE_TTL_SECONDS)
+
+    return result
+  }
+
+  private buildCacheKey(request: GetFeedUseCaseRequest): string {
+    if (!request.isAuthenticated || !request.userId) {
+      return 'feed:anonymous'
+    }
+    return `feed:${request.userId}:${request.cursor ?? 'first'}`
+  }
+
+  // this is your existing Challenge 9 logic, unchanged -- only extracted
+  // into its own method so the cache-aside wrapper above stays readable
+  private async computeFeed(request: GetFeedUseCaseRequest): Promise<GetFeedResponse> {
     if (!request.isAuthenticated || !request.userId) {
       const posts = await this.postRepository.findMany({ limit: ANONYMOUS_LIMIT })
       return { posts, nextCursor: null }
@@ -38,15 +65,13 @@ export class GetFeedUseCase {
 
     const followingIds = await this.followRepository.findFollowingIds(request.userId)
 
-    // new user with no follows yet -- fall back to pure discovery,
-    // otherwise the feed would be empty on day one
     if (followingIds.length === 0) {
       const posts = await this.postRepository.findMany({
         authorIdNotIn: [request.userId],
         cursor: request.cursor,
         limit: FOLLOWING_LIMIT + DISCOVERY_LIMIT,
       })
-      return this.buildResponse(posts, FOLLOWING_LIMIT + DISCOVERY_LIMIT)
+      return this.buildPaginatedResponse(posts, FOLLOWING_LIMIT + DISCOVERY_LIMIT)
     }
 
     const followingPosts = await this.postRepository.findMany({
@@ -62,17 +87,15 @@ export class GetFeedUseCase {
 
     const interleaved = this.interleave(followingPosts, discoveryPosts)
 
-    return this.buildResponse(interleaved, FOLLOWING_LIMIT + 1)
+    return this.buildPaginatedResponse(interleaved, FOLLOWING_LIMIT + 1)
   }
 
-  // inserts one discovery post after every 9 following posts
   private interleave(main: Post[], discovery: Post[]): Post[] {
     const result: Post[] = []
     let discoveryIndex = 0
 
     main.forEach((post, index) => {
       result.push(post)
-      // after every 9th post, insert a discovery post if available
       if ((index + 1) % 9 === 0 && discoveryIndex < discovery.length) {
         const discoveryPost = discovery[discoveryIndex]
         if (discoveryPost) {
@@ -85,7 +108,7 @@ export class GetFeedUseCase {
     return result
   }
 
-  private buildResponse(posts: Post[], expectedFullPage: number): GetFeedResponse {
+  private buildPaginatedResponse(posts: Post[], expectedFullPage: number): GetFeedResponse {
     const hasNextPage = posts.length > expectedFullPage - 1
     const trimmed = hasNextPage ? posts.slice(0, expectedFullPage - 1) : posts
     const nextCursor = hasNextPage ? trimmed[trimmed.length - 1]?.postId ?? null : null

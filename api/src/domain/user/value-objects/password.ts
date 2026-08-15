@@ -1,4 +1,4 @@
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor';
+import { IEncryptor } from '@/domain/shared/interfaces/encryptor';
 import { Result } from '@/domain/shared/result';
 
 export class Password {

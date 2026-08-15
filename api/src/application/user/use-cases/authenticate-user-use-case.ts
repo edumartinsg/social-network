@@ -1,7 +1,7 @@
-import { UserRepository } from "@/domain/user/repositories/UserRepository"
-import { IEncryptor } from "@/domain/shared/interfaces/IEncryptor"
-import { User } from "@/domain/user/entities/user"
+import { IEncryptor } from "@/domain/shared/interfaces/encryptor"
 import { Result } from "@/domain/shared/result"
+import { User } from "@/domain/user/entities/user"
+import { UserRepository } from "@/domain/user/repositories/UserRepository"
 
 interface AuthenticateUseCaseRequest {
   email: string

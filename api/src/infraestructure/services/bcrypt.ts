@@ -1,5 +1,5 @@
+import { IEncryptor } from '@/domain/shared/interfaces/encryptor';
 import bcrypt from 'bcrypt';
-import { IEncryptor } from '@/domain/shared/interfaces/IEncryptor';
 
 // This class implements the Encryptor interface using bcrypt for hashing and comparing passwords.
 

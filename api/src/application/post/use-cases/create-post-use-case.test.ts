@@ -1,4 +1,4 @@
-import { PostRepository } from '@/domain/post/repositories/PostRepository'
+import { PostRepository } from '@/domain/post/repositories/post-repository'
 import { UserRepository } from '@/domain/user/repositories/UserRepository'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreatePostUseCase } from './create-post-use-case'

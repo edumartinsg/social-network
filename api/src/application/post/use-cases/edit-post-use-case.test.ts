@@ -1,5 +1,5 @@
 import { Post } from '@/domain/post/entities/post'
-import { PostRepository } from '@/domain/post/repositories/PostRepository'
+import { PostRepository } from '@/domain/post/repositories/post-repository'
 import { ArticleContent } from '@/domain/post/value-objects/article-content'
 import { ImageContent } from '@/domain/post/value-objects/image-content'
 import { MediaType } from '@/domain/post/value-objects/media-type'

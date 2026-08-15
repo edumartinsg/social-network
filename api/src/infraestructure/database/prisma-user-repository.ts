@@ -1,11 +1,11 @@
-import { UserRepository } from "@/domain/user/repositories/UserRepository"
-import { prisma } from "./lib/prisma"
 import { User } from "@/domain/user/entities/user"
-import { Email } from "@/domain/user/value-objects/email"
-import { UserName } from "@/domain/user/value-objects/username"
+import { UserRepository } from "@/domain/user/repositories/UserRepository"
 import { Age } from "@/domain/user/value-objects/age"
+import { Email } from "@/domain/user/value-objects/email"
 import { Password } from "@/domain/user/value-objects/password"
 import { UserId } from "@/domain/user/value-objects/userId"
+import { UserName } from "@/domain/user/value-objects/username"
+import { prisma } from "./lib/prisma"
 
 export class PrismaUserRepository implements UserRepository {
 

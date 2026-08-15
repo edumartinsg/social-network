@@ -1,14 +1,14 @@
-import { Result } from "@/domain/shared/result"
-import { PostRepository } from "@/domain/post/repositories/PostRepository"
-import { UserRepository } from "@/domain/user/repositories/UserRepository"
 import { Post } from "@/domain/post/entities/post"
-import { MediaType } from "@/domain/post/value-objects/media-type"
-import { PostTitle } from "@/domain/post/value-objects/post-title"
-import { PostCaption } from "@/domain/post/value-objects/post-caption"
+import { PostRepository } from "@/domain/post/repositories/post-repository"
 import { ArticleContent } from "@/domain/post/value-objects/article-content"
 import { ImageContent } from "@/domain/post/value-objects/image-content"
+import { MediaType } from "@/domain/post/value-objects/media-type"
+import { PostCaption } from "@/domain/post/value-objects/post-caption"
+import { PostTitle } from "@/domain/post/value-objects/post-title"
 import { VideoContent } from "@/domain/post/value-objects/video-content"
 import { Image } from "@/domain/shared/image"
+import { Result } from "@/domain/shared/result"
+import { UserRepository } from "@/domain/user/repositories/UserRepository"
 
 interface CreatePostUseCaseRequest {
   authorId: string
