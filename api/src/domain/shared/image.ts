@@ -1,7 +1,10 @@
 import { Result } from "@/domain/shared/result"
 
+// RECONSTRUCTED: corrected version, one URL per Image instance, without
+// the async reduceQualityForArticle method that was flagged as a
+// domain-layer violation (async self-transformation).
 export class Image {
-  private constructor(private readonly _url: string) {} // one URL per Image
+  private constructor(private readonly _url: string) {}
 
   public static create(url: string): Result<Image> {
     if (!url || url.trim().length === 0) {
@@ -13,5 +16,7 @@ export class Image {
     return Result.ok(new Image(url))
   }
 
-  get url(): string { return this._url }
+  get url(): string {
+    return this._url
+  }
 }

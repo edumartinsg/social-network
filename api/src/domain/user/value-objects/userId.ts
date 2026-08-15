@@ -18,12 +18,7 @@ export class UserId {
     return this._value === other._value;
   }
 
-
-
- get value(): string {
-    //if return this.value it will cause a stack overflow because it will call the getter recursively.
+  get value(): string {
     return this._value;
   }
-
 }
-

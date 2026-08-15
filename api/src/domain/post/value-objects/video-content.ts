@@ -1,6 +1,8 @@
 import { Result } from "@/domain/shared/result"
-import { get } from "https"
 
+// RECONSTRUCTED: corrected version storing url + duration, without the
+// HTTP streaming logic that was flagged as a domain-layer violation.
+// Verify against your last known-good version if available.
 export class VideoContent {
   private constructor(
     private readonly _url: string,

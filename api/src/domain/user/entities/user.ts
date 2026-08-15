@@ -15,6 +15,7 @@ export interface UserProps {
   password: Password;
   createdAt: Date;
   updatedAt: Date | null;
+  deletedAt?: Date | null;
 }
 
 export class User extends Entity<UserProps> {
@@ -31,6 +32,7 @@ export class User extends Entity<UserProps> {
     password: Password;
     createdAt?: Date;
     updatedAt?: Date | null;
+    deletedAt?: Date | null;
   }): Result<User> {
     const now = new Date();
 
@@ -39,6 +41,7 @@ export class User extends Entity<UserProps> {
       age: props.age,
       createdAt: props.createdAt ?? now,
       updatedAt: props.updatedAt ?? null,
+      deletedAt: props.deletedAt ?? null,
       username: props.username,
     });
 
@@ -48,6 +51,20 @@ export class User extends Entity<UserProps> {
   public equals(other: User): boolean {
     if (!other) return false;
     return this.props.id.equals(other.props.id);
+  }
+
+  public updateEmail(newEmail: Email): void {
+    this.props.email = newEmail;
+    this.props.updatedAt = new Date();
+  }
+
+  public updatePassword(newPassword: Password): void {
+    this.props.password = newPassword;
+    this.props.updatedAt = new Date();
+  }
+
+  public delete(): void {
+    this.props.deletedAt = new Date();
   }
 
   get id(): UserId {
@@ -80,5 +97,9 @@ export class User extends Entity<UserProps> {
 
   get updatedAt(): Date | null {
     return this.props.updatedAt;
+  }
+
+  get deletedAt(): Date | null {
+    return this.props.deletedAt ?? null;
   }
 }

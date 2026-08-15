@@ -1,11 +1,13 @@
+// RECONSTRUCTED: base Entity class, referenced constantly throughout
+// the conversation but the exact file was never pasted. This reflects
+// the usage pattern observed (protected props, constructor(props)).
+// Verify against your original if you still have it anywhere (e.g.
+// an old terminal history, IDE local history, or a previous commit
+// message diff on GitHub).
 export abstract class Entity<T> {
-  protected readonly props: T;
-  protected constructor(props: T) {
-    this.props = props;
-  }
+  protected props: T
 
-  equals(object?: Entity<T>): boolean {
-    if (!object) return false;
-    return (this as any).id.value === (object as any).id.value;
+  constructor(props: T) {
+    this.props = props
   }
 }

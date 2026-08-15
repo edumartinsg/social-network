@@ -1,24 +1,41 @@
 {
-  "name": "api",
+  "name": "social-network-api",
   "version": "1.0.0",
-  "type": "module",
+  "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/server.ts",
+    "dev": "tsx watch src/presentation/http/server.ts",
     "build": "tsup src",
-        "test": "vitest run",
+    "worker": "tsx watch src/infraestructure/queue/upload-worker.ts",
+    "pretest": "docker compose up -d",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@fastify/cors": "^9.0.1",
+    "@aws-sdk/client-s3": "^3.1106.0",
+    "@fastify/cookie": "^11.1.2",
+    "@fastify/cors": "^11.3.0",
+    "@fastify/jwt": "^10.2.1",
+    "@fastify/multipart": "^10.1.0",
+    "@fastify/rate-limit": "^11.2.0",
+    "@prisma/client": "^6.13.0",
     "@types/bcrypt": "^6.0.0",
     "bcrypt": "^6.0.0",
-    "fastify": "^4.29.1"
+    "bullmq": "^6.1.0",
+    "dotenv": "^16.0.0",
+    "fastify": "^5.11.3",
+    "ioredis": "^6.0.0",
+    "zod": "^4.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.0",
+    "@types/node": "^20.19.43",
+    "form-data": "^4.0.6",
+    "prisma": "^6.13.0",
     "tsup": "^8.0.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.3.0"
+    "typescript": "^5.3.0",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.3"
   }
 }

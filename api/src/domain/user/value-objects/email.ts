@@ -8,14 +8,12 @@ export class Email {
       return Result.fail('Email is required');
     }
 
-    // Normalize
     const email = raw.trim().toLowerCase();
 
     if (!email.length) {
       return Result.fail('Email is required');
     }
 
-    // Basic safe regex for MVP
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
