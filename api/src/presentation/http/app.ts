@@ -1,12 +1,17 @@
 import { env } from '@/env'
 import fastifyCookie from '@fastify/cookie'
 import fastifyJwt from '@fastify/jwt'
+import fastifyMultipart from '@fastify/multipart'
+import fastifyRateLimit from '@fastify/rate-limit'
 import fastify from 'fastify'
 import { ZodError } from 'zod'
+import { fileRoutes } from './controllers/files/routes'
 import { postRoutes } from './controllers/posts/routes'
 import { userRoutes } from './controllers/users/routes'
 
-export const app = fastify({ logger: true })
+
+const loggerInstance = require('pino')();
+export const app = fastify({ loggerInstance })
 
 console.log('Connected to database:', env.DATABASE_URL)
 
@@ -16,6 +21,16 @@ app.register(fastifyJwt, {
 
 app.register(fastifyCookie)
 
+app.register(fastifyMultipart, {
+  limits: { fileSize: 100 * 1024 * 1024 }
+})
+app.register(fastifyRateLimit, {
+  max: env.NODE_ENV === 'test' ? 1000 : 10,
+  timeWindow: '1 minute',
+})
+
+
+app.register(fileRoutes, { prefix: '/files' })
 app.register(userRoutes, { prefix: '/users' })
 app.register(postRoutes, { prefix: '/posts' })
 

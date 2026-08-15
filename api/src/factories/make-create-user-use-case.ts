@@ -1,5 +1,5 @@
-import { PrismaUserRepository } from '@/infraestructure/database/prisma-user-repository';
 import { CreateUserUseCase } from '@/application/user/use-cases/create-user-use-case';
+import { PrismaUserRepository } from '@/infraestructure/database/prisma-user-repository';
 import { BcryptEncryptor } from '@/infraestructure/services/bcrypt';
 
 export function makeCreateUserUseCase() {
