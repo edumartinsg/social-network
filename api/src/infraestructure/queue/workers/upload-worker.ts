@@ -1,7 +1,7 @@
 import { UploadFileUseCase } from '@/application/shared/use-cases/upload-file-use-case'
 import { env } from '@/env'
 import { Worker } from 'bullmq'
-import { S3Storage } from '../services/s3-storage'
+import { S3Storage } from '../../services/s3-storage'
 
 const worker = new Worker(
   'file-upload',

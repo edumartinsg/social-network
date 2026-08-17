@@ -6,6 +6,7 @@
     "dev": "tsx watch src/presentation/http/server.ts",
     "build": "tsup src",
     "worker": "tsx watch src/infraestructure/queue/upload-worker.ts",
+    "embedding-worker": "tsx watch src/infraestructure/queue/embedding-worker.ts",
     "pretest": "docker compose up -d",
     "test": "vitest run",
     "test:watch": "vitest",
