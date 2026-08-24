@@ -1,5 +1,5 @@
 import { env } from '@/env'
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import Redis from 'ioredis'
 
@@ -8,7 +8,7 @@ const redis = new Redis(env.REDIS_URL, {
   connectTimeout: 2000, // fail fast after 2 seconds instead of retrying for 36
 })
 
-export async function healthCheck(request: FastifyRequest, reply: FastifyReply) {
+export async function healthCheck(_: FastifyRequest, reply: FastifyReply) {
   const checks = {
     database: await checkDatabase(),
     redis: await checkRedis(),

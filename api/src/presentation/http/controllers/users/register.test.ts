@@ -1,4 +1,4 @@
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 

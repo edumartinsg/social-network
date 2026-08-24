@@ -1,5 +1,5 @@
 import { Follow } from '@/application/follow/entities/follow'
-import { FollowRepository } from '@/application/follow/repositories/follow-repository'
+import { FollowRepository } from '@/domain/follow/repositories/follow-repository'
 import { prisma } from './lib/prisma'
 
 export class PrismaFollowRepository implements FollowRepository {

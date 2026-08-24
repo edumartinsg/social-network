@@ -1,4 +1,4 @@
-import { FileStorage } from "@/domain/shared/interfaces/files-storage"
+import { FileStorage } from "@/domain/shared/interfaces/file-storage"
 import { Result } from "@/domain/shared/result"
 
 const ALLOWED_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'video/mp4']

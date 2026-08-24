@@ -1,6 +1,7 @@
 // src/presentation/http/controllers/files/upload.test.ts
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
+import { registerAndAuthenticate } from '@/test/helpers/register-and-authenticate'
 import FormData from 'form-data'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
@@ -16,22 +17,10 @@ await prisma.user.deleteMany()
     await prisma.$disconnect()
   })
 
-  async function registerAndAuthenticate(email: string, username: string) {
-    await app.inject({
-      method: 'POST',
-      url: '/users/register',
-      payload: { username, email, password: 'Password123!', age: 25 },
-    })
-    const authResponse = await app.inject({
-      method: 'POST',
-      url: '/users/authenticate',
-      payload: { email, password: 'Password123!' },
-    })
-    return authResponse.json().token as string
-  }
+
 
   it('should enqueue an upload job successfully with authentication', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+const { token } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
 
     const form = new FormData()
     form.append('file', Buffer.from([0x89, 0x50, 0x4e, 0x47]), {
@@ -86,22 +75,10 @@ describe('GET /files/upload/:jobId/status', () => {
     await prisma.$disconnect()
   })
 
-  async function registerAndAuthenticate(email: string, username: string) {
-    await app.inject({
-      method: 'POST',
-      url: '/users/register',
-      payload: { username, email, password: 'Password123!', age: 25 },
-    })
-    const authResponse = await app.inject({
-      method: 'POST',
-      url: '/users/authenticate',
-      payload: { email, password: 'Password123!' },
-    })
-    return authResponse.json().token as string
-  }
+
 
   it('should return 404 for a job that does not exist', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+    const { token } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
 
     const response = await app.inject({
       method: 'GET',
@@ -113,7 +90,7 @@ describe('GET /files/upload/:jobId/status', () => {
   })
 
   it('should return the job status right after enqueueing, before any worker processes it', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+    const { token } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
 
     const form = new FormData()
     form.append('file', Buffer.from([0x89, 0x50, 0x4e, 0x47]), {

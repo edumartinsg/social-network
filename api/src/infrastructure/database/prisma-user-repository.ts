@@ -1,5 +1,5 @@
 import { User } from "@/domain/user/entities/user"
-import { UserRepository } from "@/domain/user/repositories/UserRepository"
+import { UserRepository } from "@/domain/user/repositories/user-repository"
 import { Age } from "@/domain/user/value-objects/age"
 import { Email } from "@/domain/user/value-objects/email"
 import { Password } from "@/domain/user/value-objects/password"
@@ -15,6 +15,18 @@ export class PrismaUserRepository implements UserRepository {
     return this.toDomain(row)
   }
 
+  async searchByUsername(query: string): Promise<User[]> {
+    const rows = await prisma.user.findMany({
+      where: {
+        username: {
+          contains: query,
+          mode: 'insensitive',
+        },
+      },
+    })
+    return rows.map((row) => this.toDomain(row))
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const row = await prisma.user.findUnique({ where: { email } })
     if (!row) return null
@@ -26,6 +38,16 @@ export class PrismaUserRepository implements UserRepository {
     if (!row) return null
     return this.toDomain(row)
   }
+
+  async findManyByIds(ids: string[]): Promise<User[]> {
+  if (ids.length === 0) return []
+
+  const rows = await prisma.user.findMany({
+    where: { id: { in: ids } },
+  })
+
+  return rows.map((row) => this.toDomain(row))
+}
 
   async save(user: User): Promise<void> {
     const data = this.toPersistence(user)
@@ -54,6 +76,7 @@ export class PrismaUserRepository implements UserRepository {
       password: Password.createHashed(row.password).value, // skips validation rules
       name: row.name ?? undefined,
       createdAt: row.createdAt,
+      avatarUrl: row.avatarUrl ?? null,
       updatedAt: row.updatedAt ?? null,
       deletedAt: row.deletedAt ?? null,
     }).value
@@ -69,6 +92,7 @@ export class PrismaUserRepository implements UserRepository {
       age: user.age.value,
       password: user.password.value,
       name: user.name ?? null,
+      avatarUrl: user.avatarUrl ?? null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt ?? null,
       deletedAt: user.deletedAt ?? null,

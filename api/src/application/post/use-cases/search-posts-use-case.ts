@@ -1,5 +1,5 @@
 import { EmbeddingProvider } from '@/domain/shared/interfaces/embedding-provider'
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 
 interface SearchPostsUseCaseRequest {
   query: string

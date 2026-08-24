@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "migrate:test": "DATABASE_URL=$TEST_DATABASE_URL npx prisma migrate deploy",
     "dev": "tsx watch src/presentation/http/server.ts",
     "build": "tsup src",
-    "worker": "tsx watch src/infraestructure/queue/upload-worker.ts",
-    "embedding-worker": "tsx watch src/infraestructure/queue/embedding-worker.ts",
+    "worker": "tsx watch src/infrastructure/queue/workers/upload-worker.ts",
+    "embedding-worker": "tsx watch src/infrastructure/queue/workers/embedding-worker.ts",
     "pretest": "docker compose up -d",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
+    "@vitest/coverage-v8": "^2.1.9",
     "form-data": "^4.0.6",
     "prisma": "^6.13.0",
     "tsup": "^8.0.0",

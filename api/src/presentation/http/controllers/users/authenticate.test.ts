@@ -1,13 +1,13 @@
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('POST /users/authenticate', () => {
 
   beforeEach(async () => {
-await prisma.follow.deleteMany()
-await prisma.post.deleteMany()
-await prisma.user.deleteMany()
+    await prisma.follow.deleteMany()
+    await prisma.post.deleteMany()
+    await prisma.user.deleteMany()
 
     await app.inject({
       method: 'POST',
@@ -25,12 +25,12 @@ await prisma.user.deleteMany()
     await prisma.$disconnect()
   })
 
-  it('should authenticate successfully with correct credentials', async () => {
+  it('should authenticate successfully with an email identifier', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/users/authenticate',
       payload: {
-        email: 'john@email.com',
+        identifier: 'john@email.com',
         password: 'Password123!',
       },
     })
@@ -43,35 +43,45 @@ await prisma.user.deleteMany()
     expect(body.token).toMatch(/^[\w-]+\.[\w-]+\.[\w-]+$/)
   })
 
+  it('should authenticate successfully with a username identifier', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/users/authenticate',
+      payload: {
+        identifier: 'johndoe',
+        password: 'Password123!',
+      },
+    })
+
+    expect(response.statusCode).toBe(200)
+    expect(response.json().token).toBeDefined()
+  })
+
   it('should fail with the wrong password', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/users/authenticate',
       payload: {
-        email: 'john@email.com',
+        identifier: 'john@email.com',
         password: 'WrongPassword123!',
       },
     })
 
     expect(response.statusCode).toBe(401)
-
-    const body = response.json()
-    expect(body.message).toBe('Invalid credentials')
+    expect(response.json().message).toBe('Invalid credentials')
   })
 
-  it('should fail with an email that does not exist', async () => {
+  it('should fail with an identifier that does not exist', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/users/authenticate',
       payload: {
-        email: 'nobody@email.com',
+        identifier: 'nobody@email.com',
         password: 'Password123!',
       },
     })
 
     expect(response.statusCode).toBe(401)
-
-    const body = response.json()
-    expect(body.message).toBe('Invalid credentials')
+    expect(response.json().message).toBe('Invalid credentials')
   })
 })

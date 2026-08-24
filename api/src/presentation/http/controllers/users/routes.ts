@@ -1,21 +1,19 @@
-import { authenticate } from "./authenticate"
-// import { profile } from "./profile"
 import { FastifyInstance } from "fastify"
-import { register } from "./register"
-
-
 import { verifyJwt } from "../../middlewares/verify-jwt"
+import { getPostsByAuthor } from "../posts/get-posts-by-author"
+import { authenticate } from "./authenticate"
 import { followUser } from "./follow"
+import { register } from "./register"
+import { searchUsers } from "./search"
 import { unfollowUser } from "./unfollow"
+import { updateAvatar } from "./update-avatar"
 
 export async function userRoutes(app: FastifyInstance) {
   app.post("/register", register)
+  app.post('/avatar', { onRequest: [verifyJwt] }, updateAvatar)
+  app.get('/search', searchUsers)
+  app.get('/:username/posts', getPostsByAuthor)
   app.post("/authenticate", authenticate)
   app.post("/:userId/follow", { onRequest: [verifyJwt] }, followUser)
   app.delete("/:userId/follow", { onRequest: [verifyJwt] }, unfollowUser)
-
-  //   app.patch("/token/refresh", refresh)
-
-  /** Authenticated */
-  //   app.get("/me", { onRequest: [verifyJwt] }, profile)
 }

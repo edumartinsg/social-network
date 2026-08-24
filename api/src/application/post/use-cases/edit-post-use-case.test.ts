@@ -12,7 +12,7 @@ import { EditPostUseCase } from './edit-post-use-case'
 function makeArticlePost(overrides?: { authorId?: string }) {
   return Post.create({
     title: PostTitle.create('My Article').value,
-    authorId: overrides?.authorId ?? 'author-123',
+    authorId: overrides?.authorId ?? '11111111-1111-4111-8111-111111111111',
     mediaType: MediaType.create('article').value,
     content: ArticleContent.create('a'.repeat(100), []).value,
   }).value
@@ -22,7 +22,7 @@ function makeImagePost(overrides?: { authorId?: string }) {
   const image = Image.create('https://example.com/photo.jpg').value
   return Post.create({
     title: PostTitle.create('My Images').value,
-    authorId: overrides?.authorId ?? 'author-123',
+    authorId: overrides?.authorId ?? '11111111-1111-4111-8111-111111111111',
     mediaType: MediaType.create('image').value,
     content: ImageContent.create([image]).value,
   }).value
@@ -31,7 +31,7 @@ function makeImagePost(overrides?: { authorId?: string }) {
 function makeVideoPost(overrides?: { authorId?: string }) {
   return Post.create({
     title: PostTitle.create('My Video').value,
-    authorId: overrides?.authorId ?? 'author-123',
+    authorId: overrides?.authorId ?? '11111111-1111-4111-8111-111111111111',
     mediaType: MediaType.create('video').value,
     content: VideoContent.create('https://example.com/v.mp4', 60).value,
   }).value
@@ -45,6 +45,7 @@ describe('EditPostUseCase', () => {
     mockPostRepository = {
       findById: vi.fn().mockResolvedValue(null),
       findByAuthor: vi.fn().mockResolvedValue([]),
+      findMany: vi.fn(),
       save: vi.fn().mockResolvedValue(undefined),
       hardDelete: vi.fn().mockResolvedValue(undefined),
       softDelete: vi.fn().mockResolvedValue(undefined),
@@ -57,7 +58,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'b'.repeat(100),
     })
 
@@ -70,7 +71,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       imageUrls: ['https://example.com/new.jpg'],
     })
 
@@ -83,7 +84,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       videoUrl: 'https://example.com/new.mp4',
       videoDurationSeconds: 90,
     })
@@ -95,7 +96,7 @@ describe('EditPostUseCase', () => {
   it('should fail if post is not found', async () => {
     const result = await useCase.execute({
       postId: 'nonexistent',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'a'.repeat(100),
     })
 
@@ -110,7 +111,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'a'.repeat(100),
     })
 
@@ -125,7 +126,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'a'.repeat(100),
     })
 
@@ -140,7 +141,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'a'.repeat(100),
     })
 
@@ -156,7 +157,7 @@ describe('EditPostUseCase', () => {
 
     await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'b'.repeat(100),
     })
 
@@ -169,7 +170,7 @@ describe('EditPostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      authorId: 'author-123',
+      authorId: '11111111-1111-4111-8111-111111111111',
       body: 'too short',
     })
 

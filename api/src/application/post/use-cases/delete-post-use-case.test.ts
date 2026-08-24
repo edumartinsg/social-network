@@ -9,7 +9,7 @@ import { DeletePostUseCase } from './delete-post-use-case'
 function makePost(overrides?: { authorId?: string }) {
   return Post.create({
     title: PostTitle.create('My Article').value,
-    authorId: overrides?.authorId ?? 'author-123',
+    authorId: overrides?.authorId ?? '11111111-1111-4111-8111-111111111111',
     mediaType: MediaType.create('article').value,
     content: ArticleContent.create('a'.repeat(100), []).value,
   }).value
@@ -22,6 +22,7 @@ describe('DeletePostUseCase', () => {
   beforeEach(() => {
     mockPostRepository = {
       findById: vi.fn().mockResolvedValue(null),
+      findMany: vi.fn().mockResolvedValue([]),
       findByAuthor: vi.fn().mockResolvedValue([]),
       save: vi.fn().mockResolvedValue(undefined),
       hardDelete: vi.fn().mockResolvedValue(undefined),
@@ -36,7 +37,7 @@ describe('DeletePostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      requesterId: 'author-123',
+      requesterId: '11111111-1111-4111-8111-111111111111',
       isModerationAction: false,
     })
 
@@ -64,7 +65,7 @@ describe('DeletePostUseCase', () => {
   it('should fail if post is not found', async () => {
     const result = await useCase.execute({
       postId: 'nonexistent',
-      requesterId: 'author-123',
+      requesterId: '11111111-1111-4111-8111-111111111111',
       isModerationAction: false,
     })
 
@@ -80,7 +81,7 @@ describe('DeletePostUseCase', () => {
 
     const result = await useCase.execute({
       postId: 'post-1',
-      requesterId: 'author-123',
+      requesterId: '11111111-1111-4111-8111-111111111111',
       isModerationAction: false,
     })
 
@@ -91,7 +92,7 @@ describe('DeletePostUseCase', () => {
   it('should not call either delete method on any failure path', async () => {
     await useCase.execute({
       postId: 'nonexistent',
-      requesterId: 'author-123',
+      requesterId: '11111111-1111-4111-8111-111111111111',
       isModerationAction: false,
     })
 

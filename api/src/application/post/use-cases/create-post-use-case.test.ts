@@ -1,5 +1,5 @@
 import { PostRepository } from '@/domain/post/repositories/post-repository'
-import { UserRepository } from '@/domain/user/repositories/UserRepository'
+import { UserRepository } from '@/domain/user/repositories/user-repository'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreatePostUseCase } from './create-post-use-case'
 
@@ -9,7 +9,7 @@ describe('CreatePostUseCase', () => {
   let mockUserRepository: UserRepository
 
   const baseRequest = {
-    authorId: 'author-123',
+    authorId: '11111111-1111-4111-8111-111111111111',
     title: 'My first post',
   }
 
@@ -26,8 +26,10 @@ describe('CreatePostUseCase', () => {
     mockUserRepository = {
       findByEmail: vi.fn().mockResolvedValue(null),
       findByUsername: vi.fn().mockResolvedValue(null),
+      findManyByIds: vi.fn().mockResolvedValue([]),
+      searchByUsername: vi.fn().mockResolvedValue([]),
       // by default, author exists — override in the "not found" test
-      findById: vi.fn().mockResolvedValue({ id: 'author-123' } as any),
+      findById: vi.fn().mockResolvedValue({ id: '11111111-1111-4111-8111-111111111111' } as any),
       save: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn().mockResolvedValue(undefined),
     }

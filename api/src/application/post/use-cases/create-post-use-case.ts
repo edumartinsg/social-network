@@ -8,7 +8,7 @@ import { PostTitle } from "@/domain/post/value-objects/post-title"
 import { VideoContent } from "@/domain/post/value-objects/video-content"
 import { Image } from "@/domain/shared/image"
 import { Result } from "@/domain/shared/result"
-import { UserRepository } from "@/domain/user/repositories/UserRepository"
+import { UserRepository } from "@/domain/user/repositories/user-repository"
 
 interface CreatePostUseCaseRequest {
   authorId: string

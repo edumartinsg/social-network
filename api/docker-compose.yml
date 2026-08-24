@@ -43,6 +43,17 @@ services:
     volumes:
       - minio_data:/data
 
+  createbuckets:
+    image: minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc alias set local http://minio:9000 minioadmin minioadmin) do echo 'aguardando minio...' && sleep 1; done;
+      /usr/bin/mc mb --ignore-existing local/social-network-uploads;
+      exit 0;
+      "
+
 volumes:
   pgdata:
   pgdata_test:

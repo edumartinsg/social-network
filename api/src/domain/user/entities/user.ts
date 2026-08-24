@@ -1,15 +1,16 @@
 import { Entity } from '@/domain/shared/entity';
-import { UserId } from '../value-objects/userId';
+import { Result } from '@/domain/shared/result';
+import { Age } from '../value-objects/age';
 import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
-import { Result } from '@/domain/shared/result';
+import { UserId } from '../value-objects/userId';
 import { UserName } from '../value-objects/username';
-import { Age } from '../value-objects/age';
 
 export interface UserProps {
   id: UserId;
   email: Email;
   name?: string;
+  avatarUrl?: string | null;
   username: UserName;
   age: Age;
   password: Password;
@@ -27,6 +28,7 @@ export class User extends Entity<UserProps> {
     id: UserId;
     name?: string;
     email: Email;
+    avatarUrl?: string | null;
     age: Age;
     username: UserName;
     password: Password;
@@ -43,6 +45,7 @@ export class User extends Entity<UserProps> {
       updatedAt: props.updatedAt ?? null,
       deletedAt: props.deletedAt ?? null,
       username: props.username,
+      avatarUrl: props.avatarUrl ?? null,
     });
 
     return Result.ok(user);
@@ -63,12 +66,22 @@ export class User extends Entity<UserProps> {
     this.props.updatedAt = new Date();
   }
 
+  public changeAvatar(newAvatarUrl: string): void {
+  this.props.avatarUrl = newAvatarUrl
+  this.props.updatedAt = new Date()
+}
+
   public delete(): void {
     this.props.deletedAt = new Date();
   }
 
   get id(): UserId {
     return this.props.id;
+  }
+
+
+  get avatarUrl(): string | null {
+    return this.props.avatarUrl ?? null;
   }
 
   get username(): UserName {

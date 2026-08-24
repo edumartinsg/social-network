@@ -1,0 +1,17 @@
+
+:root {
+  --color-canvas: #fafaf9;
+  --color-surface: #ffffff;
+  --color-ink: #171717;
+  --color-ink-muted: #6b6b68;
+  --color-ink-inverse: #fafaf9;
+  --color-line: #e8e7e3;
+  --color-scrim: rgba(15, 15, 14, 0.55);
+
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  --tracking-eyebrow: 0.04em;
+
+  --radius-card: 4px;
+  --duration-hover: 380ms;
+  --ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
+}

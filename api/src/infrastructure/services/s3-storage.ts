@@ -1,4 +1,4 @@
-import { FileStorage } from '@/domain/shared/interfaces/files-storage'
+import { FileStorage } from '@/domain/shared/interfaces/file-storage'
 import { env } from '@/env'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { randomUUID } from 'crypto'

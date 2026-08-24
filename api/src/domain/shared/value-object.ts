@@ -1,5 +1,5 @@
 // RECONSTRUCTED: base ValueObject class, referenced but never pasted
-// in full. Most of your actual Value Objects (Email, Password, etc.)
+// in full. Most of your actual Value Objects (email, password, etc.)
 // do not extend this and instead implement the pattern directly with
 // a private constructor + static create(). Kept here for completeness
 // in case anything in your codebase does extend it.

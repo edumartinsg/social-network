@@ -1,4 +1,5 @@
 # Challenge 2 — User Domain
+
 Build the User domain.
 
 Email Value Object — validates format, stores lowercase
