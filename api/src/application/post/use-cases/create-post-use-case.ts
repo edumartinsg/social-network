@@ -7,6 +7,7 @@ import { PostCaption } from "@/domain/post/value-objects/post-caption"
 import { PostTitle } from "@/domain/post/value-objects/post-title"
 import { VideoContent } from "@/domain/post/value-objects/video-content"
 import { Image } from "@/domain/shared/image"
+import { EmbeddingQueue } from "@/domain/shared/interfaces/embedding-queue"
 import { Result } from "@/domain/shared/result"
 import { UserRepository } from "@/domain/user/repositories/user-repository"
 
@@ -30,7 +31,8 @@ type CreatePostUseCaseResponse = Result<Post>
 export class CreatePostUseCase {
   constructor(
     private postRepository: PostRepository,
-    private userRepository: UserRepository
+    private userRepository: UserRepository,
+    private embeddingQueue: EmbeddingQueue
   ) {}
 
   public async execute(request: CreatePostUseCaseRequest): Promise<CreatePostUseCaseResponse> {
@@ -105,6 +107,19 @@ export class CreatePostUseCase {
 
     // 7. persist
     await this.postRepository.save(postOrError.value)
+
+    // 8. enqueue embedding generation -- fire-and-forget from the caller's
+    // perspective, matches Challenge 11's reasoning: a network call (this
+    // one to Ollama) shouldn't block the HTTP response. Text embedded is
+    // title + caption + article body, whichever apply -- searchable across
+    // every media type, not just articles, since title/caption exist on all
+    const searchableText = [
+      titleOrError.value.value,
+      caption?.value,
+      mediaTypeOrError.value.value === 'article' ? (content as ArticleContent).body : null,
+    ].filter(Boolean).join(' ')
+
+    await this.embeddingQueue.enqueue(postOrError.value.postId, searchableText)
 
     return Result.ok(postOrError.value)
   }

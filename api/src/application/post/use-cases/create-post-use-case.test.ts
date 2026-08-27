@@ -1,4 +1,5 @@
 import { PostRepository } from '@/domain/post/repositories/post-repository'
+import { EmbeddingQueue } from '@/domain/shared/interfaces/embedding-queue'
 import { UserRepository } from '@/domain/user/repositories/user-repository'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { CreatePostUseCase } from './create-post-use-case'
@@ -7,6 +8,7 @@ describe('CreatePostUseCase', () => {
   let postUseCase: CreatePostUseCase
   let mockPostRepository: PostRepository
   let mockUserRepository: UserRepository
+  let mockEmbeddingQueue: EmbeddingQueue
 
   const baseRequest = {
     authorId: '11111111-1111-4111-8111-111111111111',
@@ -34,7 +36,11 @@ describe('CreatePostUseCase', () => {
       delete: vi.fn().mockResolvedValue(undefined),
     }
 
-    postUseCase = new CreatePostUseCase(mockPostRepository, mockUserRepository)
+    mockEmbeddingQueue = {
+      enqueue: vi.fn().mockResolvedValue(undefined),
+    }
+
+    postUseCase = new CreatePostUseCase(mockPostRepository, mockUserRepository, mockEmbeddingQueue)
   })
 
   it('should create an article post successfully', async () => {
@@ -119,5 +125,29 @@ describe('CreatePostUseCase', () => {
 
     expect(result.isFailure).toBe(true)
     expect(mockPostRepository.save).not.toHaveBeenCalled()
+  })
+
+  it('should enqueue embedding generation with title, caption and body combined', async () => {
+    await postUseCase.execute({
+      ...baseRequest,
+      caption: 'a great day',
+      mediaType: 'article',
+      body: 'a'.repeat(100),
+    })
+
+    expect(mockEmbeddingQueue.enqueue).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.stringContaining('My first post')
+    )
+  })
+
+  it('should not enqueue embedding generation if validation fails', async () => {
+    await postUseCase.execute({
+      ...baseRequest,
+      mediaType: 'article',
+      body: 'too short',
+    })
+
+    expect(mockEmbeddingQueue.enqueue).not.toHaveBeenCalled()
   })
 })
