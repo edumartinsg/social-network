@@ -20,7 +20,7 @@ export function LoginForm() {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ identifier, password }),
     })
 
     if (!response.ok) {
@@ -32,15 +32,16 @@ export function LoginForm() {
     router.push('/feed')
   }
 
+  const newLocal = "rounded-md bg-[var(--color-ink)] text-[var(--color-ink-inverse)] py-2 text-sm font-medium mt-1"
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto flex flex-col gap-3">
-      <h1 className="text-xl font-medium text-[var(--color-ink)] mb-2">Log in</h1>
+      <h1 className="text-4xl font-medium text-(--color-ink) mb-2 center">SOCIAL NETWORK</h1>
       {error && <p className="text-sm text-red-600">{error}</p>}
       <input
-        placeholder="Email or username"
+        placeholder="Email or username "
         value={identifier}
         onChange={(e) => setIdentifier(e.target.value)}
-        className="rounded-md border border-[var(--color-line)] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+        className="rounded-md border border-(--color-line) px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
         required
       />
       <input
@@ -48,16 +49,16 @@ export function LoginForm() {
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        className="rounded-md border border-[var(--color-line)] px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
+        className="rounded-md border border-(--color-line) px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[var(--color-ink)]"
         required
       />
       <button
         type="submit"
-        className="rounded-md bg-[var(--color-ink)] text-[var(--color-ink-inverse)] py-2 text-sm font-medium mt-1"
+        className={newLocal}
       >
         Log in
       </button>
-      <a href="/register" className="text-center text-sm text-[var(--color-ink-muted)] mt-1">
+      <a href="/register" className="text-center text-sm text-(--color-ink-muted) mt-1">
         Don&apos;t have an account? Sign up
       </a>
     </form>

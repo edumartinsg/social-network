@@ -1,16 +1,11 @@
-import { PostCard, FeedPostView } from './post-card'
+import { FeedPostView, PostCard } from './post-card'
 
 interface FeedGridProps {
   posts: FeedPostView[]
 }
 
-// CSS columns, not a JS masonry library. A true masonry layout solves a
-// bin-packing problem, reordering items to minimise gaps -- this feed never
-// needs that, since reading order (top to bottom, left to right) matters
-// more here than perfect packing. That makes the zero-dependency native
-// approach the correct trade-off, not just the cheaper one.
 export function FeedGrid({ posts }: FeedGridProps) {
-  if (posts.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
       <p className="text-sm text-[var(--color-ink-muted)] text-center py-16">
         Nothing here yet.

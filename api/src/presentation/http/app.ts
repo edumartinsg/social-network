@@ -41,7 +41,7 @@ app.register(healthRoutes, { prefix: '/health' })
 
 app.setErrorHandler((error, request, reply) => {
   if (error instanceof ZodError) {
-    return reply.status(400).send({ message: 'Validation error.', issues: error.format() })
+    return reply.status(400).send({ message: 'Credential could not be verified', issues: error.format() })
   }
 
   // request.log is Fastify's logger, already scoped to THIS request's correlationId --
