@@ -1,16 +1,14 @@
+import { API_URL } from '@/lib/api'
 import { NextRequest, NextResponse } from 'next/server'
 
-// The one place identifier/password ever touch a cookie. Every other
-// authenticated route trusts this cookie already being set -- centralising
-// the httpOnly write here is what makes that trust safe (Challenge 15's
-// BFF decision: the browser never holds the JWT itself).
 export async function POST(request: NextRequest) {
   const body = await request.json()
 
-  const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/authenticate`, {
+  const apiResponse = await fetch(`${API_URL}/users/authenticate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
+    cache: 'no-store',
   })
 
   const data = await apiResponse.json()

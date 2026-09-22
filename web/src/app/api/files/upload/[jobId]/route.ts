@@ -1,12 +1,13 @@
 import { apiFetch } from '@/lib/api'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(request: NextRequest) {
-  const formData = await request.formData()
+export async function GET(
+  _request: NextRequest,
+  { params }: { params: Promise<{ jobId: string }> },
+) {
+  const { jobId } = await params
 
-  const apiResponse = await apiFetch('/users/avatar', {
-    method: 'POST',
-    body: formData,
+  const apiResponse = await apiFetch(`/files/upload/${jobId}/status`, {
     auth: true,
   })
 

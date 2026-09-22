@@ -1,7 +1,9 @@
 // application/post/use-cases/get-feed-use-case.test.ts
 import { FollowRepository } from '@/domain/follow/repositories/follow-repository'
+import { Post } from '@/domain/post/entities/post'
 import { PostRepository } from '@/domain/post/repositories/post-repository'
 import { CacheProvider } from '@/domain/shared/interfaces/cache-provider'
+import { PostSerializer } from '@/domain/shared/interfaces/post-serializer'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { GetFeedUseCase } from './get-feed-use-case'
 
@@ -9,6 +11,7 @@ describe('GetFeedUseCase — caching behaviour', () => {
   let mockPostRepository: PostRepository
   let mockFollowRepository: FollowRepository
   let mockCacheProvider: CacheProvider
+  let mockPostSerializer: PostSerializer
   let useCase: GetFeedUseCase
 
   beforeEach(() => {
@@ -34,7 +37,25 @@ describe('GetFeedUseCase — caching behaviour', () => {
       delete: vi.fn().mockResolvedValue(undefined),
     }
 
-    useCase = new GetFeedUseCase(mockPostRepository, mockFollowRepository, mockCacheProvider)
+    // Why this mock does plain JSON round-tripping instead of reconstructing
+    // real Post entities via Post.create(): every test in this file only
+    // ever deals with an EMPTY posts array. There is no Post instance for
+    // this fake to get wrong. What it needs to prove is that
+    // GetFeedUseCase calls serialize/deserialize at the right moments
+    // (cache write, cache read) -- not that Value Object reconstruction
+    // is correct, which is PostCacheSerializer's own concern and belongs
+    // in a test file for that class specifically, not here.
+    mockPostSerializer = {
+      serialize: vi.fn((posts: Post[]) => JSON.stringify(posts)),
+      deserialize: vi.fn((json: string) => JSON.parse(json)),
+    }
+
+    useCase = new GetFeedUseCase(
+      mockPostRepository,
+      mockFollowRepository,
+      mockCacheProvider,
+      mockPostSerializer
+    )
   })
 
   it('should hit the repository on a cache miss and then store the result', async () => {
@@ -53,6 +74,24 @@ describe('GetFeedUseCase — caching behaviour', () => {
 
     expect(mockPostRepository.findMany).not.toHaveBeenCalled()
     expect(result).toEqual({ posts: [], nextCursor: null })
+  })
+
+  it('should deserialize cached posts through the serializer, not raw JSON.parse', async () => {
+    // This is the regression test for the actual bug: it proves the use
+    // case calls postSerializer.deserialize on a cache hit rather than
+    // trusting JSON.parse's plain-object output directly.
+    const cachedResponse = JSON.stringify({ posts: [], nextCursor: null })
+    mockCacheProvider.get = vi.fn().mockResolvedValue(cachedResponse)
+
+    await useCase.execute({ isAuthenticated: false })
+
+    expect(mockPostSerializer.deserialize).toHaveBeenCalledTimes(1)
+  })
+
+  it('should serialize posts through the serializer before caching, not raw JSON.stringify', async () => {
+    await useCase.execute({ isAuthenticated: false })
+
+    expect(mockPostSerializer.serialize).toHaveBeenCalledTimes(1)
   })
 
   it('should use different cache keys for different users', async () => {
