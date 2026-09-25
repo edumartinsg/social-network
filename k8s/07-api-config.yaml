@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: social-network
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/social_network?schema=public"
+  REDIS_URL: "redis://redis:6379"
+  S3_ENDPOINT: "http://minio:9000"
+  S3_BUCKET_NAME: "social-network-uploads"
+  OLLAMA_URL: "http://ollama:11434"

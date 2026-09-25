@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload-worker
+  namespace: social-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload-worker
+  template:
+    metadata:
+      labels:
+        app: upload-worker
+    spec:
+      containers:
+        - name: upload-worker
+          image: social-network-api:v1
+          imagePullPolicy: Never
+          command: ["npx", "tsx", "src/infrastructure/queue/workers/upload-worker.ts"]
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: embedding-worker
+  namespace: social-network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: embedding-worker
+  template:
+    metadata:
+      labels:
+        app: embedding-worker
+    spec:
+      containers:
+        - name: embedding-worker
+          image: social-network-api:v1
+          imagePullPolicy: Never
+          command: ["npx", "tsx", "src/infrastructure/queue/workers/embedding-worker.ts"]
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secret
