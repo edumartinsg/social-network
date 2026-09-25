@@ -1,0 +1,12 @@
+name: Test Self-Hosted Runner
+
+on:
+  push:
+    branches: [main, feat/kubernetes-deploy]
+
+jobs:
+  hello:
+    runs-on: self-hosted
+    steps:
+      - name: Say hello
+        run: echo "This is running on my own Mac, not GitHub's servers"
