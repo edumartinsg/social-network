@@ -1,10 +1,12 @@
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
+import { registerAndAuthenticate } from '@/test/helpers/register-and-authenticate'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('POST /posts', () => {
 
   beforeEach(async () => {
+    await prisma.follow.deleteMany()
     await prisma.post.deleteMany()
     await prisma.user.deleteMany()
   })
@@ -13,27 +15,7 @@ describe('POST /posts', () => {
     await prisma.$disconnect()
   })
 
-  async function registerAndAuthenticate(email: string, username: string) {
-    await app.inject({
-      method: 'POST',
-      url: '/users/register',
-      payload: {
-        username,
-        email,
-        password: 'Password123!',
-        age: 25,
-      },
-    })
 
-    const authResponse = await app.inject({
-      method: 'POST',
-      url: '/users/authenticate',
-      payload: { email, password: 'Password123!' },
-    })
-
-    const { token } = authResponse.json()
-    return token as string
-  }
 
   it('should fail with no Authorization header', async () => {
     const response = await app.inject({
@@ -50,7 +32,7 @@ describe('POST /posts', () => {
   })
 
   it('should succeed with a valid token', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+    const { token } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
 
     const response = await app.inject({
       method: 'POST',
@@ -75,7 +57,7 @@ describe('POST /posts', () => {
   })
 
   it('should ignore a forged authorId in the body and use the token instead', async () => {
-    const aliceToken = await registerAndAuthenticate('alice@email.com', 'alice')
+    const { token: aliceToken } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
 
     await app.inject({
       method: 'POST',

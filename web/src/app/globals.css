@@ -1,0 +1,29 @@
+@import "tailwindcss";
+@import "../styles/design-tokens.css";
+
+/*
+ * Why no prefers-color-scheme dark block: the default Next template shipped
+ * one, but the token file defines a single light palette. A media query
+ * that flips --background while every component reads --color-canvas would
+ * produce a half-dark interface (dark page, light cards) which is worse
+ * than no dark mode at all. Dark mode is a deliberate future decision that
+ * needs its own full token set, not an inherited default.
+ */
+
+@theme inline {
+  --color-background: var(--color-canvas);
+  --color-foreground: var(--color-ink);
+  --font-sans: var(--font-body);
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line-strong) transparent;
+}

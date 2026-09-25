@@ -1,5 +1,5 @@
 import { EditPostUseCase } from '@/application/post/use-cases/edit-post-use-case'
-import { PrismaPostRepository } from '@/infraestructure/database/prisma-post-repository'
+import { PrismaPostRepository } from '@/infrastructure/database/prisma-post-repository'
 
 // no UserRepository needed here -- authorisation is a comparison against
 // post.authorId, already loaded with the post itself. CreatePostUseCase

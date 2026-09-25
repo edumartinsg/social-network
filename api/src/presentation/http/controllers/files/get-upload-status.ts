@@ -1,4 +1,4 @@
-import { uploadQueue } from '@/infraestructure/queue/upload-queue'
+import { uploadQueue } from '@/infrastructure/queue/upload-queue'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 

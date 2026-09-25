@@ -1,33 +1,19 @@
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
+import { registerAndAuthenticate } from '@/test/helpers/register-and-authenticate'
 import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('PUT /posts/:id', () => {
 
   beforeEach(async () => {
-    await prisma.post.deleteMany()
-    await prisma.user.deleteMany()
+await prisma.follow.deleteMany()
+await prisma.post.deleteMany()
+await prisma.user.deleteMany()
   })
 
   afterAll(async () => {
     await prisma.$disconnect()
   })
-
-  async function registerAndAuthenticate(email: string, username: string) {
-    await app.inject({
-      method: 'POST',
-      url: '/users/register',
-      payload: { username, email, password: 'Password123!', age: 25 },
-    })
-
-    const authResponse = await app.inject({
-      method: 'POST',
-      url: '/users/authenticate',
-      payload: { email, password: 'Password123!' },
-    })
-
-    return authResponse.json().token as string
-  }
 
   async function createArticlePost(token: string) {
     const response = await app.inject({
@@ -44,7 +30,7 @@ describe('PUT /posts/:id', () => {
   }
 
   it('should edit an article successfully', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+    const {token} = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
     const postId = await createArticlePost(token)
 
     const response = await app.inject({
@@ -73,10 +59,10 @@ describe('PUT /posts/:id', () => {
   })
 
   it('should fail if the post belongs to another user', async () => {
-    const aliceToken = await registerAndAuthenticate('alice@email.com', 'alice')
+    const { token: aliceToken } = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
     const postId = await createArticlePost(aliceToken)
 
-    const bobToken = await registerAndAuthenticate('bob@email.com', 'bob')
+const { token: bobToken } = await registerAndAuthenticate(app, 'bob@email.com', 'bob')
 
     const response = await app.inject({
       method: 'PUT',
@@ -89,7 +75,7 @@ describe('PUT /posts/:id', () => {
   })
 
   it('should fail if the post was deleted', async () => {
-    const token = await registerAndAuthenticate('alice@email.com', 'alice')
+    const {token} = await registerAndAuthenticate(app, 'alice@email.com', 'alice')
     const postId = await createArticlePost(token)
 
     await app.inject({
@@ -105,7 +91,6 @@ describe('PUT /posts/:id', () => {
       payload: { body: 'b'.repeat(100) },
     })
 
-    console.log(response.json())
 
     expect(response.statusCode).toBe(404)
   })

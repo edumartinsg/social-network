@@ -1,11 +1,11 @@
+import { IEncryptor } from "@/domain/shared/interfaces/encryptor";
 import { Result } from "@/domain/shared/result";
 import { User } from "@/domain/user/entities/user";
-import { Email } from "@/domain/user/value-objects/email";
-import { UserId } from "@/domain/user/value-objects/userId";
-import { Password } from "@/domain/user/value-objects/password";
+import { UserRepository } from "@/domain/user/repositories/user-repository";
 import { Age } from "@/domain/user/value-objects/age";
-import { UserRepository } from "@/domain/user/repositories/UserRepository";
-import { IEncryptor } from "@/domain/shared/interfaces/IEncryptor";
+import { Email } from "@/domain/user/value-objects/email";
+import { Password } from "@/domain/user/value-objects/password";
+import { UserId } from "@/domain/user/value-objects/userId";
 import { UserName } from "@/domain/user/value-objects/username";
 
 interface CreateUserUseCaseRequest {

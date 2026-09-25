@@ -1,8 +1,8 @@
-import { expect, test, describe } from "vitest"
-import { Post } from "./post"
-import { PostTitle } from "../value-objects/post-title"
-import { MediaType } from "../value-objects/media-type"
+import { describe, expect, test } from "vitest"
 import { ArticleContent } from "../value-objects/article-content"
+import { MediaType } from "../value-objects/media-type"
+import { PostTitle } from "../value-objects/post-title"
+import { Post } from "./post"
 
 describe('Post', () => {
 
@@ -11,7 +11,7 @@ describe('Post', () => {
       title: PostTitle.create("My first post").value,
       mediaType: MediaType.create("article").value,
       content: ArticleContent.create("a".repeat(100), []).value,
-      authorId: "author-123",
+      authorId: "11111111-1111-4111-8111-111111111111",
     }).value
   }
 
@@ -20,7 +20,7 @@ describe('Post', () => {
     expect(post).toBeInstanceOf(Post)
     expect(post.title.value).toBe("My first post")
     expect(post.mediaType.value).toBe("article")
-    expect(post.authorId).toBe("author-123")
+    expect(post.authorId).toBe("11111111-1111-4111-8111-111111111111")
     expect(post.createdAt).toBeInstanceOf(Date)
     expect(post.updatedAt).toBeNull()
     expect(post.deletedAt).toBeNull()

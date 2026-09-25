@@ -1,0 +1,54 @@
+/*
+ * Why tokens live in their own file rather than inside globals.css: these
+ * are the vocabulary the entire interface is written in, and they change
+ * for different reasons than layout resets do. Keeping them separate means
+ * a colour or spacing decision is a one-file diff that never risks
+ * touching the Tailwind import or base element styles.
+ *
+ * Why raw CSS custom properties instead of a Tailwind theme config: the
+ * values are consumed both by Tailwind arbitrary values and by plain CSS
+ * Modules (post-card.module.css). A Tailwind-only theme would be invisible
+ * to the Modules; custom properties are visible to both without
+ * duplicating the source of truth.
+ */
+
+:root {
+  /* Surfaces. canvas is the page, surface is anything raised above it. */
+  --color-canvas: #fafaf9;
+  --color-surface: #ffffff;
+  --color-surface-sunken: #f4f3f1;
+
+  /* Ink. A three-step ramp is enough: primary text, secondary text,
+     and text that sits on a dark background. More steps invite
+     inconsistency without adding real hierarchy. */
+  --color-ink: #171717;
+  --color-ink-muted: #6b6b68;
+  --color-ink-faint: #a3a29e;
+  --color-ink-inverse: #fafaf9;
+
+  --color-line: #e8e7e3;
+  --color-line-strong: #d6d4cf;
+  --color-scrim: rgba(15, 15, 14, 0.55);
+
+  --color-danger: #b42318;
+  --color-accent: #171717;
+
+  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+  --tracking-eyebrow: 0.08em;
+
+  --radius-card: 10px;
+  --radius-control: 8px;
+  --radius-pill: 999px;
+
+  --duration-hover: 380ms;
+  --duration-quick: 160ms;
+  --ease-hover: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --shadow-raised: 0 1px 2px rgba(15, 15, 14, 0.04), 0 8px 24px rgba(15, 15, 14, 0.06);
+
+  /* Why the nav height is a token: three separate things depend on it --
+     the nav itself, the page top padding that clears it, and the mobile
+     bottom bar's inverse offset. A magic number repeated three times
+     drifts the moment one of them changes. */
+  --size-nav: 56px;
+}

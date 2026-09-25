@@ -1,12 +1,13 @@
-import { describe, it, expect, beforeEach, afterAll } from 'vitest'
+import { prisma } from '@/infrastructure/database/lib/prisma'
 import { app } from '@/presentation/http/app'
-import { prisma } from '@/infraestructure/database/lib/prisma'
+import { afterAll, beforeEach, describe, expect, it } from 'vitest'
 
 describe('POST /users/register', () => {
 
   beforeEach(async () => {
-    await prisma.post.deleteMany()
-    await prisma.user.deleteMany()
+await prisma.follow.deleteMany()
+await prisma.post.deleteMany()
+await prisma.user.deleteMany()
   })
 
   afterAll(async () => {
