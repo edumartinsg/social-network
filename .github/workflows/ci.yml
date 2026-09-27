@@ -68,3 +68,18 @@ jobs:
         if: always()
         run: |
           docker rm -f ci-postgres ci-redis
+
+  build:
+    needs: test
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        working-directory: api
+        run: docker build -t social-network-api:${{ github.sha }} .
+
+      - name: Import image into k3d cluster
+        run: k3d image import social-network-api:${{ github.sha }} -c social-network
