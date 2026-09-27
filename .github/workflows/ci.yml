@@ -83,3 +83,23 @@ jobs:
 
       - name: Import image into k3d cluster
         run: k3d image import social-network-api:${{ github.sha }} -c social-network
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+      - name: Deploy API
+        run: kubectl set image deployment/api api=social-network-api:${{ github.sha }} -n social-network
+
+      - name: Deploy upload worker
+        run: kubectl set image deployment/upload-worker upload-worker=social-network-api:${{ github.sha }} -n social-network
+
+      - name: Deploy embedding worker
+        run: kubectl set image deployment/embedding-worker embedding-worker=social-network-api:${{ github.sha }} -n social-network
+
+      - name: Wait for rollout to finish
+        run: |
+          kubectl rollout status deployment/api -n social-network --timeout=60s
+          kubectl rollout status deployment/upload-worker -n social-network --timeout=60s
+          kubectl rollout status deployment/embedding-worker -n social-network --timeout=60s
